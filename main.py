@@ -58,3 +58,8 @@ while run:
      sprites.draw(win)     
      pygame.display.update()
 
+
+class game():
+     def __init__(self, windowWidth):
+          self.windowWidth = windowWidth
+          

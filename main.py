@@ -26,13 +26,16 @@ stars = pygame.sprite.Group()
 
 # stars
 for i in range(50):
-    star = Star(white, WIDTH, HEIGHT)
+    star = Star(game.white, game.width, game.height)
     stars.add(star)
+
+
+
 
 sprites.add(stars)
 
 # rocket
-rocket = Rocket(red, math.floor(WIDTH/10), math.floor(WIDTH/2), math.floor(HEIGHT*0.75))
+rocket = Rocket(game.rocket_colour, math.floor(game.width/10), math.floor(game.width/2), math.floor(game.height*0.75))
 sprites.add(rocket)
 
 
@@ -63,12 +66,9 @@ while run:
         s.updatePos(rocket.speed)
 
 
-    
-    # increase score
-    rocket.score += rocket.speed
 
     # draw score
-    text = game.font.render(str(rocket.score), True, game.white)
+    text = game.font.render(str(rocket.score) + "m, PLANET: " + str(game.planet_num), True, game.white)
     textbox = text.get_rect()
     textbox.topleft = (10,10)
     win.blit(text, textbox)

@@ -7,7 +7,7 @@ from pygame.locals import *
 
 # ROCKET CLASS
 class Rocket(pygame.sprite.Sprite):
-    def __init__(self, colour, width, centre_x, y):
+    def __init__(self, colour, width, centre_x, centre_y):
           
         super().__init__()
 
@@ -16,7 +16,7 @@ class Rocket(pygame.sprite.Sprite):
         self.image.fill(colour)
         self.rect = self.image.get_rect()
         self.rect.x = centre_x - math.floor(width/2)
-        self.rect.y = y
+        self.rect.y = centre_y
 
 
         # set game vars
@@ -32,6 +32,10 @@ class Rocket(pygame.sprite.Sprite):
             
         if right_key:
             self.rect.x += self.speed
+
+            
+        self.score += self.speed
+
 
     
 class Star(pygame.sprite.Sprite):
@@ -95,6 +99,9 @@ class Game():
 
         #font
         self.font = pygame.font.SysFont("Impact", 30 )
+
+        # game vars
+        self.planet_num = 1
 
     def update(self):
 

@@ -9,34 +9,13 @@ from rocket import *
 
 pygame.init()
 
-def draw_text(x, y, string, col, size, window):
-     font = pygame.font.SysFont("Impact", size )
-     text = font.render(string, True, col)
-     textbox = text.get_rect()
-     textbox.center = (x, y)
-     window.blit(text, textbox)
 
-     return textbox
-
-# COLOURS
-white = pygame.Color(255, 255, 255)
-blue = pygame.Color(0, 0, 40)
-black = pygame.Color(0, 0, 0)
-red = pygame.Color(255, 0, 0)
+# SET GAME CONTROLLER
+game = Game(400)
 
 
-# SET WINDOW
-WIDTH = 400
-HEIGHT = math.floor(WIDTH*1.5)
-
-win = pygame.display.set_mode((WIDTH, HEIGHT))
+win = pygame.display.set_mode((game.width, game.height))
 pygame.display.set_caption("Space Game")
-
-
-# SET CLOCK
-clock = pygame.time.Clock()
-fps = 30
-
 
 
 # SPRITES
@@ -50,7 +29,9 @@ for i in range(50):
     star = Star(white, WIDTH, HEIGHT)
     stars.add(star)
 
-sprites.add(stars)# rocket
+sprites.add(stars)
+
+# rocket
 rocket = Rocket(red, math.floor(WIDTH/10), math.floor(WIDTH/2), math.floor(HEIGHT*0.75))
 sprites.add(rocket)
 
@@ -59,11 +40,10 @@ sprites.add(rocket)
 # MAIN GAME LOOP
 run = True
 while run:
-    # clock
-    clock.tick(fps)
+    
     
     # update display
-    win.fill(blue)
+    win.fill(game.back_colour)
 
      
     # EVENTS
@@ -84,19 +64,18 @@ while run:
 
 
     
-    # draw score
+    # increase score
     rocket.score += rocket.speed
 
-    #draw_text(math.floor(WIDTH/2), math.floor(HEIGHT*0.2), str(rocket.score), white, 30, win)
-    font = pygame.font.SysFont("Impact", 30 )
-    text = font.render(str(rocket.score), True, white)
+    # draw score
+    text = game.font.render(str(rocket.score), True, game.white)
     textbox = text.get_rect()
-    textbox.center = (100, 100)
+    textbox.topleft = (10,10)
     win.blit(text, textbox)
 
-    # update win
-    sprites.draw(win)     
-    pygame.display.update()
+    # update
+    sprites.draw(win)  
+    game.update()
 
 
 # IMPLEMENT - when rocket is flying/playing game, 

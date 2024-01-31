@@ -20,7 +20,7 @@ class Rocket(pygame.sprite.Sprite):
 
 
         # set game vars
-        self.speed = 5
+        self.speed = 4
         self.score = 0
         
 
@@ -57,7 +57,8 @@ class Star(pygame.sprite.Sprite):
             pygame.draw.line(self.image, colour, (self.rect.centerx, 0), (self.rect.centerx, self.height))
             pygame.draw.line(self.image, colour, (0, self.rect.centery), (self.width,self.rect.centery))
         else:
-            pygame.draw.circle(self.image, colour, self.rect.center, random.randint(1, self.width))
+            
+            pygame.draw.line(self.image, colour, self.rect.center, self.rect.center)
           
         self.setPos()
 
@@ -71,6 +72,6 @@ class Star(pygame.sprite.Sprite):
             self.rect.y += speed
         else:
             self.rect.x = random.randint(0, self.win_width)
-            self.rect.y = -1 * random.randint(self.height, self.height*5)
+            self.rect.y = -1 * self.height
 
    

@@ -32,8 +32,7 @@ class Rocket(pygame.sprite.Sprite):
             
         if right_key:
             self.rect.x += self.speed
-
-            
+     
         self.score += self.speed
 
 
@@ -58,10 +57,11 @@ class Star(pygame.sprite.Sprite):
 
         # draw star lines
         if random.randint(0, 3) >= 1:
+            # cross
             pygame.draw.line(self.image, colour, (self.rect.centerx, 0), (self.rect.centerx, self.height))
             pygame.draw.line(self.image, colour, (0, self.rect.centery), (self.width,self.rect.centery))
         else:
-            
+            # dot
             pygame.draw.line(self.image, colour, self.rect.center, self.rect.center)
           
         self.setPos()
@@ -96,6 +96,7 @@ class Game():
         self.black = pygame.Color(0, 0, 0)
         self.back_colour = pygame.Color(0, 0, 40)
         self.rocket_colour = pygame.Color(255, 0, 0)
+        self.green = pygame.Color(0, 255, 0)
 
         #font
         self.font = pygame.font.SysFont("Impact", 30 )

@@ -101,7 +101,9 @@ class Game():
         self.font = pygame.font.SysFont("Impact", 30 )
 
         # game vars
+        self.status = "menu"
         self.planet_num = 1
+        
 
     def update(self):
 

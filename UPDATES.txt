@@ -1,0 +1,10 @@
+31.01 (Saira)
+you can check my comments for details on everything ive done but a summary:
+- created a Game class and stored all the global vars in that
+- separated the code into 3 functions (ive only implemented the main menu and the run game, not the checkpoints)
+- ive put those 3 methods in a dif class called page_methods, and then the main file now only contains a bit of code which switches between those methods (all depending on the game.status attribute of the game class)
+- ive also split the other classes into dif files so its easier to look at everything
+- Ive created 'dummy'/'prototypes' of asteroids and a planet. (they are basically just red and green stars) and then ive used these to implement the collision detection and the increasing the planet count/speed
+
+- another idea i had that we could do after we finish:
+ instead of 3 distinct classes (Planet, Star and Asteroid), maybe we have a class for all of them like FallingObj and then we can create the Star, Asteroid and Planet clsases to inherit the Falling class, since a lot of the attributes and methods are similar they are just implemented a bit dif...

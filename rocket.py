@@ -24,13 +24,12 @@ class Rocket(pygame.sprite.Sprite):
         self.score = 0
         
 
-    def updatePos(self, left_key, right_key):
+    def updatePos(self, keys):
         
-        if left_key:
+        if keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
             
-            
-        if right_key:
+        if keys[pygame.K_RIGHT]:
             self.rect.x += self.speed
      
         self.score += self.speed

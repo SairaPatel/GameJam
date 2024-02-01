@@ -44,11 +44,10 @@ for i in range(5):
 
 # overall sprite group
 sprites = pygame.sprite.Group()
-sprites.add(rocket)
-sprites.add(planet)
 sprites.add(stars)
+sprites.add(planet)
 sprites.add(asteroids)
-
+sprites.add(rocket)
     
 # MAIN GAME LOOP
 run = True
@@ -67,9 +66,8 @@ while run:
             sys.exit()
 
 
-    # KEYS PRESSED
-    keys = pygame.key.get_pressed();
-    rocket.updatePos(keys[pygame.K_LEFT], keys[pygame.K_RIGHT])
+    # UPDATE ROCKET BASED ON KEYS PRESSED
+    rocket.updatePos(pygame.key.get_pressed())
     
 #   MAYBE HAVE A SINGLE CLASS: FallingObject - And have Star, Asteroid and Planet inherit it.?
 #	And then (instead of having 3 dif for loops/lines to call updatePos for star, asteroid and planet in the main loop),

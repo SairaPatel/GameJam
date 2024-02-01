@@ -20,24 +20,31 @@ pygame.display.set_caption("Space Game")
 
 # SPRITES
 
-# overall sprite group
-sprites = pygame.sprite.Group()
-stars = pygame.sprite.Group()
+# rocket
+rocket = Rocket(game.rocket_colour, math.floor(game.width/10), math.floor(game.width/2), math.floor(game.height*0.75))
+
 
 # stars
+stars = pygame.sprite.Group()
 for i in range(50):
     star = Star(game.white, game.width, game.height)
     stars.add(star)
 
 
+# prototype obstacles
+asteroids = pygame.sprite.Group()
+for i in range(5):
+    ast = Star(game.rocket_colour, game.width, game.height)
+    asteroids.add(ast)
 
 
+
+
+# overall sprite group
+sprites = pygame.sprite.Group()
 sprites.add(stars)
-
-# rocket
-rocket = Rocket(game.rocket_colour, math.floor(game.width/10), math.floor(game.width/2), math.floor(game.height*0.75))
+sprites.add(asteroids)
 sprites.add(rocket)
-
 
     
 # MAIN GAME LOOP
@@ -64,7 +71,19 @@ while run:
     # update stars - CHANGE THIS: create a Stars class, to hold a list of stars and automatically update all their pos with one method call
     for s in stars.sprites():
         s.updatePos(rocket.speed)
-
+    
+    # update asteroids
+    for a in asteroids.sprites():
+        a.updatePos(rocket.speed)
+    
+    # rocket and asteroid collision
+    if len(pygame.sprite.spritecollide(rocket, asteroids, True)) > 0:
+        # below is temporary code so we can see that the asteroid collision code is working:
+        # change this so that the game ends/checkpoint page shows (rather than displaying COLLISION text)
+        text = game.font.render("COLLISION", True, game.white)
+        textbox = text.get_rect()
+        textbox.topleft = (200,10)
+        win.blit(text, textbox)
 
 
     # draw score

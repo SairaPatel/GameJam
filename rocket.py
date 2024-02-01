@@ -108,3 +108,5 @@ class Game():
         # update display and tick clock
         pygame.display.update()
         self.clock.tick(self.fps)
+
+

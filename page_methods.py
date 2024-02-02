@@ -8,16 +8,16 @@ from falling_classes import *
 
 
 
-# IMPLEMENT - when rocket is flying/playing game, 
+#when rocket is flying/playing game, 
 def run(win, game):
     
     # SPRITES
 
     # rocket
-    rocket = Rocket(game.rocket_colour, math.floor(game.width/10), math.floor(game.width/2), math.floor(game.height*0.75))
+    rocket = Rocket(game.rocket_colour, game.width, game.height)
  
-    # prototype planet CHANGE THIS TO ACTUAL PLANET CLASS OBJ
-    planet = Star(game.green, game.width, game.height)
+    # prototype planet
+    planet = Planet(game.green, game.width, game.height)
 
     # stars
     stars = pygame.sprite.Group()
@@ -25,11 +25,10 @@ def run(win, game):
         star = Star(game.white, game.width, game.height)
         stars.add(star)
 
-
-    # prototype asteroids CHANGE THIS TO ACTUAL ASTEROID CLASS OBJS
+    # asteroids
     asteroids = pygame.sprite.Group()
     for i in range(5):
-        ast = Star(game.rocket_colour, game.width, game.height)
+        ast = Asteroid(game.rocket_colour, game.width, game.height)
         asteroids.add(ast)
 
     # overall sprite group
@@ -60,7 +59,7 @@ def run(win, game):
     #	And then (instead of having 3 dif for loops/lines to call updatePos for star, asteroid and planet in the main loop),
     #	just add them all to a single sprite group e.g. (Falling) and loop through all sprites in Falling.sprites() to updatePos for all of them
 
-        # update stars - 
+        # update stars
         for s in stars.sprites():
             s.updatePos(rocket.speed)
     
@@ -68,20 +67,18 @@ def run(win, game):
         for a in asteroids.sprites():
             a.updatePos(rocket.speed)
 
-        planet.updatePos(rocket.speed)
+        # update planet pos and planet num
+        if planet.updatePos(rocket.speed):
+            game.planet_num += 1
+            rocket.speed = 5 + game.planet_num
     
         # rocket and asteroid collision
         if len(pygame.sprite.spritecollide(rocket, asteroids, True)) > 0:
             # collision CHANGE THIS (right now a collision goes to main menu but it should actually go to checkpoint)
             game.status = "menu"
             return game
-
-        # update planet num THIS PROBS NEEDS CHANGING? ITS NOT EXACT: MAYBE THIS CODE COULD GO INSIDE THE PLANET CLASS METHOD UpdatePos()
-        if planet.rect.y > game.height:
-            game.planet_num += 1
-            rocket.speed = 5 + game.planet_num/2 # REMOVE THE /2 ONCE THIS IS WORKING PROPERLY
-
-        # draw score # AND TEMPORARILLY THE PLANET NUM BUT WE WILL REMOVE THAT LATER
+        
+        # draw score # AND TEMPORARILY THE PLANET NUM BUT WE WILL REMOVE THAT LATER
         text = game.font.render(str(rocket.score) + "m, PLANET: " + str(game.planet_num), True, game.white)
         textbox = text.get_rect()
         textbox.topleft = (10,10)

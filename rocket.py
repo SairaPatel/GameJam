@@ -38,6 +38,8 @@ class Rocket(pygame.sprite.Sprite):
 
         # set game vars
         self.speed = speed
+
+        self.shielded = False 
         
 
     def updatePos(self, keys):
@@ -50,6 +52,15 @@ class Rocket(pygame.sprite.Sprite):
             if self.rect.x + self.speed + self.width < self.win_width:
                 self.rect.x += self.speed
      
+    def powerUp(self, power):
+        if power == "grow":
+            self.image = pygame.transform.scale(self.image, (math.floor(self.width *1.2), math.floor(self.height*1.2)))
+        elif power == "shrink":
+            self.image = pygame.transform.scale(self.image, (math.floor(self.width /1.2), math.floor(self.height/1.2)))
+
+        elif power == "shield":
+            self.shielded = True
 
 
-   
+
+

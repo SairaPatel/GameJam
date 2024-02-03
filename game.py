@@ -29,6 +29,12 @@ class Game():
         self.status = "menu"
         self.planet_num = 1
         self.score = 0
+
+
+        # planet image list
+        self.planet_images = ["images/BluePlanet.png", "images/RedPlanet.png", "images/PurplePlanet.png"]
+
+        
         
 
     def update(self):

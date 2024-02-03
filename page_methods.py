@@ -17,7 +17,7 @@ def run(win, game):
     rocket = Rocket(game.rocket_colour, game.width, game.height, game.planet_num + 4)
  
     # prototype planet
-    planet = Planet(game.green, game.width, game.height, game.planet_num)
+    planet = Planet(game.planet_images, game.width, game.height, game.planet_num)
 
     # stars
     stars = pygame.sprite.Group()
@@ -31,10 +31,20 @@ def run(win, game):
         ast = Asteroid(game.rocket_colour, game.width, game.height)
         asteroids.add(ast)
 
+    # big planet
+    bigPlanetGroup = pygame.sprite.GroupSingle()
+    bigPlanetGroup.add(BigPlanet(game.width, game.height, game.planet_images, game.planet_num))
+
+    #  power up
+    powerUpGroup = pygame.sprite.GroupSingle()
+    powerUpGroup.add(PowerUp(game.width, game.height))
+
     # overall sprite group
     sprites = pygame.sprite.Group()
-    sprites.add(stars)
     sprites.add(planet)
+    sprites.add(stars)
+    sprites.add(powerUpGroup)
+    sprites.add(bigPlanetGroup)
     sprites.add(asteroids)
     sprites.add(rocket)
     
@@ -64,33 +74,86 @@ def run(win, game):
             s.updatePos(rocket.speed)
     
         # update asteroids
-        for a in asteroids.sprites():
+        i = 0
+        while i < len(asteroids.sprites()):
+
+            a = asteroids.sprites()[i]
+            i += 1
+
+            # update pos
             a.updatePos(rocket.speed)
+
+             # remove overlapping asteroids
+            asteroidsWithoutA = asteroids.copy() 
+            asteroidsWithoutA.remove(a)
+
+            # get and remove overlapping asteroids
+            overlapping = pygame.sprite.spritecollide(a, asteroidsWithoutA, True)
+            asteroids.remove(overlapping)
+
+            # add new asteroid
+            for i in range(len(overlapping)):
+                newA = Asteroid(game.rocket_colour, game.width, game.height)
+                asteroids.add(newA)
+                sprites.add(newA)
+
+        # update big planet
+        if bigPlanetGroup.sprite is not None:
+            if bigPlanetGroup.sprite.updatePos(rocket.speed):
+                bigPlanetGroup.sprite.kill()
+           
 
         # update planet pos and planet num
         if planet.updatePos(rocket.speed, game.planet_num):
             game.planet_num += 1
             rocket.speed = 5 + game.planet_num
+            planet.setImage(game.planet_num)
     
         # rocket and asteroid collision
         i = 0
         while i < len(asteroids.sprites()):
-            print(pygame.sprite.collide_mask(rocket, asteroids.sprites()[i]))
             if pygame.sprite.collide_mask(rocket, asteroids.sprites()[i]) is not None:
-                game.status = "checkpoint"
-                return game
+                if not rocket.shielded:
+                    game.status = "checkpoint"
+                    return game
+                else:
+                    rocket.shielded = False
+                    asteroids.sprites()[i].setPos()
             i += 1
+
+        # update powerup
+        powerUpGroup.sprite.updatePos(rocket.speed)
+        # power up and rocket collision
+        if pygame.sprite.spritecollide(rocket, powerUpGroup, False):
+            rocket.powerUp(powerUpGroup.sprite.power)
+
+
+            # generate new powerup
+            sprites.remove(powerUpGroup)
+            powerUpGroup.empty()
+
+            powerUpGroup.add(PowerUp(game.width, game.height))
+            sprites.add(powerUpGroup)
             
         
+        # update score
         game.score += rocket.speed
+
+        # draw sprites
+        sprites.draw(win)  
+
+
         # draw score # AND TEMPORARILY THE PLANET NUM BUT WE WILL REMOVE THAT LATER
-        text = game.font.render(str(game.score) + "m, PLANET: " + str(game.planet_num), True, game.white)
+        if rocket.shielded:
+            shield_status = "On"
+        else:
+            shield_status = "Off"
+        text = game.font.render(str(game.score) + "m     PLANET: " + str(game.planet_num) + "    Shield:" + shield_status, True, game.white)
         textbox = text.get_rect()
         textbox.topleft = (10,10)
         win.blit(text, textbox)
 
         # update
-        sprites.draw(win)  
         game.update()
 
 

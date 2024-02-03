@@ -57,71 +57,84 @@ class Asteroid(pygame.sprite.Sprite):
         self.win_width = win_width
         self.win_height = win_height
 
-        self.width = 50
-        self.height = self.width
-
+        
         # set surface
-        self.image = pygame.Surface([self.width, self.height])
+        self.image = pygame.image.load("asteroid.png").convert_alpha()
         self.rect = self.image.get_rect()
 
-        # set background transparent
-        self.image.fill(pygame.Color(0,0,0))
-        self.image.set_colorkey(pygame.Color(0,0,0))
 
-        pygame.draw.circle(self.image, colour,self.rect.center, random.randint(5,15))
+        self.width = self.rect.width
+        self.height = self.rect.height
+
+        self.image = pygame.transform.scale(self.image, (math.floor(self.width * 0.5), math.floor(self.height*0.5)))
+
+        self.rect = self.image.get_rect()
+        self.width = self.rect.width
+        self.height = self.rect.height
+
         self.setPos()
 
     def setPos(self):
-        self.rect.x = random.randint(0, self.win_width)
-        self.rect.y = random.randint(0, self.win_height *  0.25)
+         self.rect.x = random.randint(0, self.win_width - self.width)
+         self.rect.y = random.randint(-2 * self.win_height, math.floor(-0.5 * self.win_height))
         
     def updatePos(self, speed):
         # increment y or reset y and x pos if y goes of the screen
         if self.rect.y < self.win_height + self.height:
             self.rect.y += speed
         else:
-            self.rect.x = random.randint(0, self.win_width)
-            self.rect.y = -1 * self.height
+            self.setPos()
 
 
 class Planet(pygame.sprite.Sprite):
-    def __init__(self, colour, win_width, win_height):
+    def __init__(self, colour, win_width, win_height, planet_num):
           
         super().__init__()
         self.win_width = win_width
         self.win_height = win_height
 
-        self.width = 100
+        self.width = 30
         self.height = self.width
 
         # set surface
-        self.image = pygame.Surface([self.width, self.height])
+        self.image = pygame.image.load("images/Earth.png").convert_alpha()
         self.rect = self.image.get_rect()
 
-        # set background transparent
-        self.image.fill(pygame.Color(0,0,0))
-        self.image.set_colorkey(pygame.Color(0,0,0))
-        self.radius = random.randint(20,40)
 
-        pygame.draw.circle(self.image, colour,self.rect.center, self.radius)
-        self.setPos()
+        self.width = self.rect.width
+        self.height = self.rect.height
 
-    def setPos(self):
+        self.image = pygame.transform.scale(self.image, (math.floor(self.width * 2), math.floor(self.height*2)))
+
+        self.rect = self.image.get_rect()
+        self.width = self.rect.width
+        self.height = self.rect.height
+
+        # set surface
+
+
+        self.rect = self.image.get_rect()
+        self.radius = math.floor(self.width/2)
+
+
+        self.setPos(planet_num)
+
+    def setPos(self, planet_num):
         self.rect.x = random.randint(0, self.win_width - self.radius)
-        self.rect.y = random.randint(0, self.win_height - self.radius)
+        self.rect.y = math.floor(-4 * planet_num * (self.height- self.radius))
+            
         
 
     # updates planet pos and returns true if planet has passed bottom (returns false otherwise)
-    def updatePos(self, speed):
+    def updatePos(self, speed, planet_num):
         # increment y or reset y and x pos if y goes of the screen
         if self.rect.y < self.win_height + self.height:
-            self.rect.y += speed
+            self.rect.y += math.floor(speed* 0.8)
 
             return False
         else:
-            self.rect.x = random.randint(0, self.win_width - self.radius)
-            self.rect.y = -1 * (self.height- self.radius)
-            
+            self.setPos(planet_num)
+
             return True
 
             

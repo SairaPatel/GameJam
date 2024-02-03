@@ -14,10 +14,10 @@ def run(win, game):
     # SPRITES
 
     # rocket
-    rocket = Rocket(game.rocket_colour, game.width, game.height)
+    rocket = Rocket(game.rocket_colour, game.width, game.height, game.planet_num + 4)
  
     # prototype planet
-    planet = Planet(game.green, game.width, game.height)
+    planet = Planet(game.green, game.width, game.height, game.planet_num)
 
     # stars
     stars = pygame.sprite.Group()
@@ -27,7 +27,7 @@ def run(win, game):
 
     # asteroids
     asteroids = pygame.sprite.Group()
-    for i in range(5):
+    for i in range(4):
         ast = Asteroid(game.rocket_colour, game.width, game.height)
         asteroids.add(ast)
 
@@ -68,18 +68,23 @@ def run(win, game):
             a.updatePos(rocket.speed)
 
         # update planet pos and planet num
-        if planet.updatePos(rocket.speed):
+        if planet.updatePos(rocket.speed, game.planet_num):
             game.planet_num += 1
             rocket.speed = 5 + game.planet_num
     
         # rocket and asteroid collision
-        if len(pygame.sprite.spritecollide(rocket, asteroids, True)) > 0:
-            # collision CHANGE THIS (right now a collision goes to main menu but it should actually go to checkpoint)
-            game.status = "menu"
-            return game
+        i = 0
+        while i < len(asteroids.sprites()):
+            print(pygame.sprite.collide_mask(rocket, asteroids.sprites()[i]))
+            if pygame.sprite.collide_mask(rocket, asteroids.sprites()[i]) is not None:
+                game.status = "checkpoint"
+                return game
+            i += 1
+            
         
+        game.score += rocket.speed
         # draw score # AND TEMPORARILY THE PLANET NUM BUT WE WILL REMOVE THAT LATER
-        text = game.font.render(str(rocket.score) + "m, PLANET: " + str(game.planet_num), True, game.white)
+        text = game.font.render(str(game.score) + "m, PLANET: " + str(game.planet_num), True, game.white)
         textbox = text.get_rect()
         textbox.topleft = (10,10)
         win.blit(text, textbox)
@@ -92,8 +97,40 @@ def run(win, game):
 
 
 # IMPLEMENT - called after rocket crashes: 
-def checkpoint(win):
-    hi = 2
+def checkpoint(win, game):
+     # MAIN MENU LOOP
+    run = True
+    while run:
+    
+        # update display
+        win.fill(game.back_colour)
+
+        # EVENTS
+        for event in pygame.event.get():
+            # QUIT GAME
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+            # ANY KEY PRESSED
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    game.status = "menu"
+                    return Game(game.width)
+
+                elif event.key == pygame.K_RIGHT:
+                    game.status = "game"
+                    return game
+
+
+        # draw start message
+        text = game.font.render("CHECKPOINT: PRESS LEFT KEY TO GO MAIN MENU", True, game.white)
+        textbox = text.get_rect()
+        textbox.topleft = (10,10)
+        win.blit(text, textbox)
+
+        # update 
+        game.update()
 
 
 
@@ -122,7 +159,7 @@ def menu(win, game):
 
 
         # draw start message
-        text = game.font.render("PRESS ANY KEY TO START", True, game.white)
+        text = game.font.render("MAIN MENU : PRESS ANY KEY TO START", True, game.white)
         textbox = text.get_rect()
         textbox.topleft = (10,10)
         win.blit(text, textbox)

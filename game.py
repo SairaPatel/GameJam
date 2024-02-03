@@ -28,6 +28,7 @@ class Game():
         # game vars
         self.status = "menu"
         self.planet_num = 1
+        self.score = 0
         
 
     def update(self):
@@ -35,5 +36,6 @@ class Game():
         # update display and tick clock
         pygame.display.update()
         self.clock.tick(self.fps)
+
 
 

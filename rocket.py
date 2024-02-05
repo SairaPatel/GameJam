@@ -7,7 +7,7 @@ from pygame.locals import *
 
 # ROCKET CLASS
 class Rocket(pygame.sprite.Sprite):
-    def __init__(self, colour, win_width, win_height, speed):
+    def __init__(self, imgName, win_width, win_height, speed):
           
         super().__init__()
 
@@ -18,7 +18,15 @@ class Rocket(pygame.sprite.Sprite):
 
         
         # set surface
-        self.imageName = "images/RocketWhite.png"
+        self.imageName = imgName
+        self.setImage()
+
+        # set game vars
+        self.speed = speed
+
+        self.shielded = False 
+        
+    def setImage(self):
 
         self.image = pygame.image.load(self.imageName).convert_alpha()
         self.rect = self.image.get_rect()
@@ -27,22 +35,16 @@ class Rocket(pygame.sprite.Sprite):
         self.width = self.rect.width
         self.height = self.rect.height
 
-        self.image = pygame.transform.scale(self.image, (math.floor(self.width *  3), math.floor(self.height*3)))
+        widthToHeight = self.height/self.width
+        self.image = pygame.transform.scale(self.image, (math.floor(self.win_width/10), math.floor(self.win_width/10 * widthToHeight)))
 
         self.rect = self.image.get_rect()
         self.width = self.rect.width
         self.height = self.rect.height
 
         
-        self.rect.x = math.floor(win_width/2) - math.floor(self.width/2)
-        self.rect.y = math.floor(win_height*0.75)
-
-
-        # set game vars
-        self.speed = speed
-
-        self.shielded = False 
-        
+        self.rect.bottomleft = (0, math.floor(self.win_height*0.7))
+        self.rect.x = math.floor(self.win_width/2) - math.floor(self.width/2)
 
     def updatePos(self, keys):
         # update rocket x pos based on keys pressed
@@ -66,12 +68,12 @@ class Rocket(pygame.sprite.Sprite):
             
             self.image = pygame.image.load(self.imageName).convert_alpha()
             self.image = pygame.transform.scale(self.image, (math.floor(self.image.get_rect().width *  3), math.floor(self.image.get_rect().height*3)))
-            self.image = pygame.transform.scale(self.image, (math.floor(self.width *1.2), math.floor(self.height*1.2)))
+            self.image = pygame.transform.scale(self.image, (math.floor(self.width *1.1), math.floor(self.height*1.1)))
 
         elif power == "shrink":
             self.image = pygame.image.load(self.imageName).convert_alpha()
             self.image = pygame.transform.scale(self.image, (math.floor(self.image.get_rect().width *  3), math.floor(self.image.get_rect().height*3)))
-            self.image = pygame.transform.scale(self.image, (math.floor(self.width /1.2), math.floor(self.height/1.2)))
+            self.image = pygame.transform.scale(self.image, (math.floor(self.width /1.1), math.floor(self.height/1.1)))
 
         elif power == "shield":
             self.shielded = True

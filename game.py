@@ -22,9 +22,7 @@ class Game():
         self.rocket_colour = pygame.Color(255, 0, 0)
         self.green = pygame.Color(0, 255, 0)
 
-        # font
-        self.font = pygame.font.SysFont("Impact", 30 )
-
+        self.font = self.getFont(30)
         # game vars
         self.status = "menu"
         self.planet_num = 1
@@ -34,15 +32,27 @@ class Game():
         # planet image list
         self.planet_images = []
         for i in range(1, 17):
-            self.planet_images.append("images//Planets/planet-" + str(i) + ".png")
+            self.planet_images.append("images/Planets/planet-" + str(i) + ".png")
+
+
+        # rocket image list
+        self.rocket_num = 0
+        self.rocket_images = []
+        for i in range(1,4):
+            self.rocket_images.append("images/Spaceships/spaceship-" + str(i) + ".png")
         
-        
+    def getFont(self, size):
+        return pygame.font.SysFont("Impact", size)
 
     def update(self):
 
         # update display and tick clock
         pygame.display.update()
         self.clock.tick(self.fps)
+
+    def getRocketImg(self):
+        self.rocket_num = self.rocket_num % len(self.rocket_images)
+        return self.rocket_images[self.rocket_num]
 
 
 

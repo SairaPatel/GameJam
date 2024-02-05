@@ -7,7 +7,7 @@ from pygame.locals import *
 
 
 class Star(pygame.sprite.Sprite):
-    def __init__(self, colour, win_width, win_height):
+    def __init__(self, win_width, win_height):
           
         super().__init__()
 
@@ -71,8 +71,15 @@ class Asteroid(pygame.sprite.Sprite):
         self.width = self.rect.width
         self.height = self.rect.height
 
+        widthToHeight = self.height/self.width * 1.2
+        self.image = pygame.transform.scale(self.image, (math.floor(self.win_width/6), math.floor(self.win_width/6 * widthToHeight)))
+
+
+        #self.image = pygame.transform.scale(self.image, (math.floor(self.width * 0.4), math.floor(self.height*0.5)))
+
+
+        
         scale = random.uniform(0.8,1.5)
-        self.image = pygame.transform.scale(self.image, (math.floor(self.width * 0.4), math.floor(self.height*0.5)))
         self.image = pygame.transform.rotozoom(self.image, random.randint(0, 360), scale)
 
         self.rect = self.image.get_rect()
@@ -229,8 +236,8 @@ class BigPlanet(pygame.sprite.Sprite):
 
     def setPos(self):
         # center x and bottom y
+        self.rect.topleft = (0, math.floor(self.win_height*0.65))
         self.rect.centerx = math.floor(self.win_width/2)
-        self.rect.centery = math.floor(self.win_height)
             
         
 
@@ -255,7 +262,7 @@ class BigPlanet(pygame.sprite.Sprite):
         self.height = self.rect.height
         widthToHeight = self.height/self.width
 
-        self.image = pygame.transform.scale(self.image, (self.win_width , math.floor(self.win_width* widthToHeight)))
+        self.image = pygame.transform.scale(self.image, (math.floor(self.win_width * 1.3) , math.floor(self.win_width* widthToHeight)))
 
         self.rect = self.image.get_rect()
         self.width = self.rect.width

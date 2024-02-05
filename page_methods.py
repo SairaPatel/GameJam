@@ -14,7 +14,7 @@ def run(win, game):
     # SPRITES
 
     # rocket
-    rocket = Rocket(game.rocket_colour, game.width, game.height, game.planet_num + 4)
+    rocket = Rocket(game.getRocketImg(), game.width, game.height, game.planet_num + 4)
  
     # prototype planet
     planet = Planet(game.planet_images, game.width, game.height, game.planet_num)
@@ -22,7 +22,7 @@ def run(win, game):
     # stars
     stars = pygame.sprite.Group()
     for i in range(100):
-        star = Star(game.white, game.width, game.height)
+        star = Star(game.width, game.height)
         stars.add(star)
 
     # asteroids
@@ -160,12 +160,24 @@ def run(win, game):
 
 # IMPLEMENT - called after rocket crashes: 
 def checkpoint(win, game):
+
+      # sprite group
+    sprites = pygame.sprite.Group()
+
+    # stars
+    stars = pygame.sprite.Group()
+    for i in range(100):
+        star = Star( game.width, game.height)
+        sprites.add(star)
+
+
      # MAIN MENU LOOP
     run = True
     while run:
     
         # update display
         win.fill(game.back_colour)
+        sprites.draw(win)
 
         # EVENTS
         for event in pygame.event.get():
@@ -185,11 +197,13 @@ def checkpoint(win, game):
                     return game
 
 
-        # draw start message
-        text = game.font.render("CHECKPOINT: PRESS LEFT KEY TO GO MAIN MENU", True, game.white)
+        # draw title
+        text = game.getFont(60).render("CHECKPOINT", True, game.white)
         textbox = text.get_rect()
-        textbox.topleft = (10,10)
+        textbox.centerx = math.floor(game.width/2)
+        textbox.centery = math.floor(game.height*0.2)
         win.blit(text, textbox)
+
 
         # update 
         game.update()
@@ -200,12 +214,32 @@ def checkpoint(win, game):
 # press start, have stars in background
 def menu(win, game):
 
+
+     # sprite group
+    sprites = pygame.sprite.Group()
+
+    # stars
+    stars = pygame.sprite.Group()
+    for i in range(100):
+        star = Star( game.width, game.height)
+        sprites.add(star)
+
+    # planet
+    sprites.add(BigPlanet(game.width, game.height, game.planet_images, game.planet_num))
+
+    # rocket
+    rocket = Rocket(game.getRocketImg(), game.width, game.height, 0)
+    sprites.add(rocket)
+
+
+
     # MAIN MENU LOOP
     run = True
     while run:
     
         # update display
         win.fill(game.back_colour)
+        sprites.draw(win)
 
         # EVENTS
         for event in pygame.event.get():
@@ -216,15 +250,48 @@ def menu(win, game):
 
             # ANY KEY PRESSED
             if event.type == pygame.KEYDOWN:
-                game.status = "game"
-                return game
 
+                # update rocket image
+                if event.key == K_LEFT:
+                    game.rocket_num +=  len(game.rocket_images) -1 
+                    rocket.imageName = game.getRocketImg()
+                    print(game.rocket_num)
+                    rocket.setImage()
+                
+                if event.key == K_RIGHT:
+                    game.rocket_num += 1
+                    rocket.imageName = game.getRocketImg()
+                    rocket.setImage()
+
+                # start game
+                elif event.key == K_SPACE:
+                    game.status = "game"
+                    return game
+            
+
+
+        # draw title
+        text = game.getFont(60).render("MAIN MENU", True, game.white)
+        textbox = text.get_rect()
+        textbox.centerx = math.floor(game.width/2)
+        textbox.centery = math.floor(game.height*0.2)
+        win.blit(text, textbox)
 
         # draw start message
-        text = game.font.render("MAIN MENU : PRESS ANY KEY TO START", True, game.white)
+        text = game.getFont(20).render("Press SPACEBAR to start", True, game.white)
         textbox = text.get_rect()
-        textbox.topleft = (10,10)
+        textbox.centery = math.floor(game.height*0.5)
+        textbox.centerx = math.floor(game.width/2)
         win.blit(text, textbox)
+
+         # draw left right arrow message
+        text = game.getFont(15).render("Use arrow keys to change spaceship", True, game.white)
+        textbox = text.get_rect()
+        textbox.bottomleft = (0, math.floor(game.height*0.9))
+        textbox.centerx = math.floor(game.width/2)
+        win.blit(text, textbox)
+
 
         # update 
         game.update()
+

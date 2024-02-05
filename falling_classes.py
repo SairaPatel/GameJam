@@ -198,7 +198,7 @@ class PowerUp(pygame.sprite.Sprite):
         self.power = random.choice(["shrink", "grow", "shield"])
 
          # set surface
-        self.image = pygame.image.load("images/" + self.power + ".png").convert_alpha()
+        self.image = pygame.image.load("images/Powerups/" + self.power + ".png").convert_alpha()
         self.rect = self.image.get_rect()
 
         

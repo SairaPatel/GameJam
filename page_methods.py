@@ -39,6 +39,11 @@ def run(win, game):
     powerUpGroup = pygame.sprite.GroupSingle()
     powerUpGroup.add(PowerUp(game.width, game.height))
 
+    # shield corner icon
+    shieldIcon = pygame.image.load("images/Powerups/shield.png").convert_alpha()
+    widthToHeight = shieldIcon.get_rect().height/shieldIcon.get_rect().width
+    shieldIcon = pygame.transform.scale(shieldIcon, (math.floor(game.width/20), math.floor(game.width/20 * widthToHeight)))
+
     # overall sprite group
     sprites = pygame.sprite.Group()
     sprites.add(planet)
@@ -133,7 +138,9 @@ def run(win, game):
             powerUpGroup.sprite.setPower()
             powerUpGroup.sprite.setPos()
            
-            
+        # display shield corner icon
+        if rocket.shielded:
+            win.blit(shieldIcon, (5, game.height - shieldIcon.get_rect().height - 5))
         
         # update score
         game.score += rocket.speed
@@ -142,14 +149,15 @@ def run(win, game):
         sprites.draw(win)  
 
 
-        # draw score # AND TEMPORARILY THE PLANET NUM BUT WE WILL REMOVE THAT LATER
-        if rocket.shielded:
-            shield_status = "On"
-        else:
-            shield_status = "Off"
-        text = game.font.render(str(game.score) + "m     PLANET: " + str(game.planet_num) + "    Shield:" + shield_status, True, game.white)
+        # draw score and planet num        
+        text = game.font.render(str(game.score) + "m", True, game.white)
         textbox = text.get_rect()
         textbox.topleft = (10,10)
+        win.blit(text, textbox)
+
+        text = game.font.render("PLANETS: " + str(game.planet_num), True, game.white)
+        textbox = text.get_rect()
+        textbox.topright = (game.width - 10, 10)
         win.blit(text, textbox)
 
         # update

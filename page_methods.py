@@ -21,7 +21,7 @@ def run(win, game):
 
     # stars
     stars = pygame.sprite.Group()
-    for i in range(50):
+    for i in range(100):
         star = Star(game.white, game.width, game.height)
         stars.add(star)
 
@@ -121,19 +121,18 @@ def run(win, game):
                     asteroids.sprites()[i].setPos()
             i += 1
 
-        # update powerup
+        # update powerup pos
         powerUpGroup.sprite.updatePos(rocket.speed)
+
         # power up and rocket collision
         if pygame.sprite.spritecollide(rocket, powerUpGroup, False):
             rocket.powerUp(powerUpGroup.sprite.power)
 
 
             # generate new powerup
-            sprites.remove(powerUpGroup)
-            powerUpGroup.empty()
-
-            powerUpGroup.add(PowerUp(game.width, game.height))
-            sprites.add(powerUpGroup)
+            powerUpGroup.sprite.setPower()
+            powerUpGroup.sprite.setPos()
+           
             
         
         # update score

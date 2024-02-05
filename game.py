@@ -32,8 +32,9 @@ class Game():
 
 
         # planet image list
-        self.planet_images = ["images/BluePlanet.png", "images/RedPlanet.png", "images/PurplePlanet.png"]
-
+        self.planet_images = []
+        for i in range(1, 17):
+            self.planet_images.append("images//Planets/planet-" + str(i) + ".png")
         
         
 

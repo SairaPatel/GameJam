@@ -12,7 +12,7 @@ class Game():
 
         # clock
         self.clock = pygame.time.Clock()
-        self.fps = 30
+        self.fps = 45
 
 
         # colours
@@ -21,6 +21,10 @@ class Game():
         self.back_colour = pygame.Color(0, 0, 40)
         self.rocket_colour = pygame.Color(255, 0, 0)
         self.green = pygame.Color(0, 255, 0)
+        self.red = pygame.Color(230,15,15)
+        self.blue =pygame.Color(15,120,230)
+
+
 
         self.font = self.getFont(30)
         # game vars

@@ -64,7 +64,7 @@ class Asteroid(pygame.sprite.Sprite):
 
         
         # set surface
-        self.image = pygame.image.load("asteroid.png").convert_alpha()
+        self.image = pygame.image.load("images/asteroid.png").convert_alpha()
         self.rect = self.image.get_rect()
 
         # dimensions
@@ -206,8 +206,8 @@ class PowerUp(pygame.sprite.Sprite):
         self.width = self.rect.width
         self.height = self.rect.height
 
-        widthToHeight = self.height/self.width
-        self.image = pygame.transform.scale(self.image, (math.floor(self.win_width/20), math.floor(self.win_width/20 * widthToHeight)))
+        heightToWidth = self.width/self.height
+        self.image = pygame.transform.scale(self.image, (math.floor(self.win_width/15 *heightToWidth), math.floor(self.win_width/15)))
 
         self.rect = self.image.get_rect()
         self.width = self.rect.width

@@ -70,9 +70,6 @@ def run(win, game):
         # UPDATE ROCKET BASED ON KEYS PRESSED
         rocket.updatePos(pygame.key.get_pressed())
     
-    #   MAYBE HAVE A SINGLE CLASS: FallingObject - And have Star, Asteroid and Planet inherit it.?
-    #	And then (instead of having 3 dif for loops/lines to call updatePos for star, asteroid and planet in the main loop),
-    #	just add them all to a single sprite group e.g. (Falling) and loop through all sprites in Falling.sprites() to updatePos for all of them
 
         # update stars
         for s in stars.sprites():
@@ -133,7 +130,6 @@ def run(win, game):
         if pygame.sprite.spritecollide(rocket, powerUpGroup, False):
             rocket.powerUp(powerUpGroup.sprite.power)
 
-
             # generate new powerup
             powerUpGroup.sprite.setPower()
             powerUpGroup.sprite.setPos()
@@ -167,7 +163,7 @@ def run(win, game):
 
 
 # IMPLEMENT - called after rocket crashes: 
-def checkpoint(win, game):
+def checkpoint2(win, game):
 
       # sprite group
     sprites = pygame.sprite.Group()
@@ -217,6 +213,94 @@ def checkpoint(win, game):
         game.update()
 
 
+def checkpoint(win, game):
+       # sprite group
+    sprites = pygame.sprite.Group()
+
+    # stars
+    stars = pygame.sprite.Group()
+    for i in range(100):
+        star = Star( game.width, game.height)
+        sprites.add(star)
+
+
+     # MAIN MENU LOOP
+    run = True
+    while run:
+    
+        # update display
+        win.fill(game.back_colour)
+        sprites.draw(win)
+
+        leftRect = pygame.Rect(25, 80, math.floor((game.width - 50)/2 ), game.height - 100)
+        pygame.draw.rect(win, game.red, leftRect )
+        rightRect = pygame.Rect(30 + math.floor((game.width - 50)/2 ), 80, math.floor((game.width - 50)/2 ), game.height -100)
+        pygame.draw.rect(win, game.blue, rightRect)
+        
+        # EVENTS
+        for event in pygame.event.get():
+            # QUIT GAME
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+            # ANY KEY PRESSED
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    game.status = "menu"
+                    return Game(game.width)
+
+                elif event.key == pygame.K_RIGHT:
+                    game.status = "game"
+                    return game
+
+
+        # draw start message
+        text = game.getFont(30).render("CHECKPOINT MENU", True, game.white)
+        textbox = text.get_rect()
+        textbox.topleft = (10,10)
+        textbox.centerx = math.floor(game.width/2)
+        win.blit(text, textbox)
+
+         # draw score
+        if game.planet_num == 1:
+            message = " planet in "
+        else:
+            message = " planets in "
+        text = game.getFont(20).render("You passed " + str(game.planet_num) + message + str(game.score) + "m", True, game.white)
+        textbox2 = text.get_rect()
+        textbox2.topleft = (0, textbox.y + textbox.height + 5)
+        textbox2.centerx = math.floor(game.width/2)
+        win.blit(text, textbox2)
+
+        #draw text for the red and blue boxes:
+        textL = game.font.render(" ← to ", True, game.white)
+        textboxL = textL.get_rect()
+        textboxL.centerx = leftRect.centerx
+        textboxL.centery = leftRect.centery - 50
+        win.blit(textL, textboxL)
+
+        textL2 = game.font.render("main menu", True, game.white)
+        textboxL2 = textL2.get_rect()
+        textboxL2.centerx = leftRect.centerx
+        textboxL2.centery = leftRect.centery
+        win.blit(textL2, textboxL2)
+
+        textR = game.font.render("   → to ", True, game.white)
+        textboxR = textR.get_rect()
+        textboxR.centerx = rightRect.centerx
+        textboxR.centery = rightRect.centery - 50
+        win.blit(textR, textboxR)
+
+        textR2 = game.font.render(" continue", True, game.white)
+        textboxR2 = textR2.get_rect()
+        textboxR2.centerx = rightRect.centerx
+        textboxR2.centery = rightRect.centery
+        win.blit(textR2, textboxR2)
+        
+
+        # update 
+        game.update()
 
 
 # press start, have stars in background
@@ -272,7 +356,7 @@ def menu(win, game):
                     rocket.setImage()
 
                 # start game
-                elif event.key == K_SPACE:
+                elif event.key == K_UP:
                     game.status = "game"
                     return game
             
@@ -286,7 +370,7 @@ def menu(win, game):
         win.blit(text, textbox)
 
         # draw start message
-        text = game.getFont(20).render("Press SPACEBAR to start", True, game.white)
+        text = game.getFont(20).render("Press UP arrow to start", True, game.white)
         textbox = text.get_rect()
         textbox.centery = math.floor(game.height*0.5)
         textbox.centerx = math.floor(game.width/2)
